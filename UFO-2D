@@ -1,0 +1,95 @@
+-----------------PlayerController.cs-----------------
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+
+public class PlayerController : MonoBehaviour {
+
+    public float speed;
+    private Rigidbody2D rb2d;
+    private int count;
+    public Text countText;
+    public Text WinText;
+
+
+
+    void Start()
+    {
+        rb2d = GetComponent<Rigidbody2D>();
+        count = 0;
+        WinText.text = "";
+        SetCountText();
+    }
+	// Use this for initialization
+	void FixedUpdate()
+    {
+        float mhorizontal = Input.GetAxis("Horizontal");
+        float mvertical = Input.GetAxis("Vertical");
+        Vector2 movement = new Vector2(mhorizontal, mvertical);
+        rb2d.AddForce(movement * speed);
+
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
+            count = count + 1;
+            SetCountText();
+        }      
+    }
+    void SetCountText()
+    {
+        countText.text = "Count :" + count.ToString();
+        if(count >= 12)
+        {
+            WinText.text = "You Win!";
+        }
+    }
+}
+
+
+
+-----------------CameraController.cs-----------------
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraController : MonoBehaviour {
+
+    public GameObject player;
+
+    private Vector3 offset;
+	// Use this for initialization
+	void Start () {
+        offset = transform.position - player.transform.position;
+		
+	}
+	
+	// Update is called once per frame
+	void LateUpdate () {
+        transform.position = player.transform.position + offset;
+		
+	}
+}
+
+-----------------Roatater.cs-----------------
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Rotater : MonoBehaviour {
+
+	
+	
+	// Update is called once per frame
+	void Update () {
+        transform.Rotate(new Vector3(0, 0, 45) * Time.deltaTime);
+		
+	}
+}
+
+
